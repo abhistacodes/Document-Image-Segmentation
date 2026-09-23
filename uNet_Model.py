@@ -226,39 +226,63 @@ class UNet(nn.Module):
             kernel_size=1
         )
 
-    def forward(self, x):
+    # def forward(self, x):
 
-        # Encoder
+    #     # Encoder
+    #     e1 = self.enc1(x)
+
+    #     e2 = self.enc2(e1)
+
+    #     e3 = self.enc3(e2)
+
+    #     e4 = self.enc4(e3)
+
+    #     # Bottleneck
+    #     b = self.bottleneck(e4)
+
+    #     # Decoder
+    #     d4 = self.dec4(
+    #         b,
+    #         e4
+    #     )
+
+    #     d3 = self.dec3(
+    #         d4,
+    #         e3
+    #     )
+
+    #     d2 = self.dec2(
+    #         d3,
+    #         e2
+    #     )
+
+    #     d1 = self.dec1(
+    #         d2,
+    #         e1
+    #     )
+
+    #     return self.output(d1)
+
+    def forward(self, x, return_features=False):
+
+    # Encoder
         e1 = self.enc1(x)
-
         e2 = self.enc2(e1)
-
         e3 = self.enc3(e2)
-
         e4 = self.enc4(e3)
 
-        # Bottleneck
+    # Bottleneck
         b = self.bottleneck(e4)
 
-        # Decoder
-        d4 = self.dec4(
-            b,
-            e4
-        )
+    # Decoder
+        d4 = self.dec4(b, e4)
+        d3 = self.dec3(d4, e3)
+        d2 = self.dec2(d3, e2)
+        d1 = self.dec1(d2, e1)
 
-        d3 = self.dec3(
-            d4,
-            e3
-        )
+        logits = self.output(d1)
 
-        d2 = self.dec2(
-            d3,
-            e2
-        )
+        if return_features:
+            return logits, b
 
-        d1 = self.dec1(
-            d2,
-            e1
-        )
-
-        return self.output(d1)
+        return logits
