@@ -19,7 +19,7 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 
 
-print(f"PyTorch version: {torch.__version__}")
+# print(f"PyTorch version: {torch.__version__}")
 
 
 #UNet Model
