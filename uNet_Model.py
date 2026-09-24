@@ -13,8 +13,6 @@ import matplotlib.pyplot as plt # type: ignore
 
 from tqdm.auto import tqdm
 
-# from sklearn.model_selection import train_test_split
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -156,6 +154,8 @@ class UpBlock(nn.Module):
 
         return self.conv(x)
 
+
+
 #complete U-Net
 class UNet(nn.Module):
 
@@ -226,42 +226,7 @@ class UNet(nn.Module):
             kernel_size=1
         )
 
-    # def forward(self, x):
 
-    #     # Encoder
-    #     e1 = self.enc1(x)
-
-    #     e2 = self.enc2(e1)
-
-    #     e3 = self.enc3(e2)
-
-    #     e4 = self.enc4(e3)
-
-    #     # Bottleneck
-    #     b = self.bottleneck(e4)
-
-    #     # Decoder
-    #     d4 = self.dec4(
-    #         b,
-    #         e4
-    #     )
-
-    #     d3 = self.dec3(
-    #         d4,
-    #         e3
-    #     )
-
-    #     d2 = self.dec2(
-    #         d3,
-    #         e2
-    #     )
-
-    #     d1 = self.dec1(
-    #         d2,
-    #         e1
-    #     )
-
-    #     return self.output(d1)
 
     def forward(self, x, return_features=False):
 
@@ -282,7 +247,8 @@ class UNet(nn.Module):
 
         logits = self.output(d1)
 
-        if return_features:
+        #if return_features is True, return the logits and the bottleneck features
+        if return_features: 
             return logits, b
 
         return logits
