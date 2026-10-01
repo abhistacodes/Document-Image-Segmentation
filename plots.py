@@ -13,9 +13,6 @@ from PIL import Image
 
 import matplotlib.pyplot as plt # type: ignore
 
-#loading bar for loops
-# from tqdm.auto import tqdm # type: ignore
-
 from sklearn.model_selection import train_test_split # type: ignore
 
 import torch
@@ -50,6 +47,8 @@ def plot_training_curves(train_loss, val_loss):
     plt.grid(True)
     plt.show()
 
+
+#plot validation dice and iou scores
 
 def plot_validation_dice(dice_values):
     plt.figure(figsize=(10, 6))
