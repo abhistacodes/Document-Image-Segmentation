@@ -1,4 +1,4 @@
-# Document Image Segmentation using U-Net on the PRImA Layout Analysis Dataset
+# Document Image Segmentation using U-Net
 
 A complete PyTorch pipeline for **multi-class semantic segmentation of document images** using **only U-Net**, followed by extraction of **class-specific deep representative feature vectors** from the trained network.
 
