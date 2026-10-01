@@ -494,11 +494,3 @@ results/
 
 
 
-## Reproducibility
-
-The default random seed is:
-
-```python
-SEED = 42
-```
-
