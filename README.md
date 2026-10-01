@@ -48,7 +48,7 @@ The current 11-class setup is:
 
 ## Dataset
 
-The project uses the **PRImA Layout Analysis Dataset**, containing document images together with PAGE XML layout annotations.
+The project uses the **PRImA Layout Analysis Dataset**, containing document images together with PAGE XML layout annotations. The dataset is available at https://www.primaresearch.org/datasets/Layout_Analysis.
 
 Expected structure:
 
