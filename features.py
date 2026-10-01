@@ -24,9 +24,7 @@ import pandas as pd
 
 
 
-# ============================================================
-# MASK-GUIDED DEEP FEATURE EXTRACTION
-# ============================================================
+#MASK GUIDED DEEP FEATURE EXTRACTION
 
 @torch.no_grad()
 def extract_class_features(
