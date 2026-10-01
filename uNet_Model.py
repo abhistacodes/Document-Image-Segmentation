@@ -1,23 +1,5 @@
-import os
-import glob
-import random
-import shutil
-import xml.etree.ElementTree as ET
-from pathlib import Path
 
-import numpy as np
-import cv2
-from PIL import Image
-
-import matplotlib.pyplot as plt # type: ignore
-
-from tqdm.auto import tqdm
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-# from torch.utils.data import Dataset, DataLoader
-
+from imports import *
 
 # print(f"PyTorch version: {torch.__version__}")
 
