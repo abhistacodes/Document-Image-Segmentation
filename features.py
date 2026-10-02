@@ -141,6 +141,26 @@ def extract_class_features(
     )
 
 
+def _highlight_row_max(row):
+    """
+    Highlight the highest numeric value in a row.
+    """
+
+    values = pd.to_numeric(row, errors="coerce")
+
+    if values.notna().sum() == 0:
+        return [""] * len(row)
+
+    max_value = values.max()
+
+    return [
+        "background-color: yellow; color: black"
+        if pd.notna(value) and (value == max_value and max_value != 0)
+        else ""
+        for value in values
+    ]
+
+
 def highest_similarity(similarity_df):
     """
     Highlight the highest class-to-class cosine similarity
@@ -210,3 +230,34 @@ def highest_similarity(similarity_df):
         highlight_max,
         axis=1
     )
+
+
+def max_threshold(similarity_df, x):
+    """
+    Convert values below threshold x to zero and highlight
+    the highest value in each row.
+
+    The original similarity_df is not modified.
+    """
+
+    # Work on a copy
+    thresholded_df = similarity_df.copy()
+
+    # Convert numeric cells below threshold to zero
+    numeric_matrix = thresholded_df.apply(
+        pd.to_numeric,
+        errors="coerce"
+    )
+
+    thresholded_df = thresholded_df.mask(
+        numeric_matrix < x,
+        0
+    )
+
+    # Highlight highest value in each row
+    styled_df = thresholded_df.style.apply(
+        _highlight_row_max,
+        axis=1
+    )
+
+    return styled_df
