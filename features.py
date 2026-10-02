@@ -141,24 +141,78 @@ def extract_class_features(
     )
 
 
-def _highlight_row_max(row):
+def highlightMax(dataframe):
     """
-    Highlight the highest numeric value in a row.
+    Highlight the highest numeric value in each row of a DataFrame.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        DataFrame/table whose row-wise maximum values should be highlighted.
+
+    Returns
+    -------
+    pandas.io.formats.style.Styler
+        Styled DataFrame with the highest value in each row highlighted.
+
+    Notes
+    -----
+    - Non-numeric values are ignored.
+    - Zero values are not highlighted.
+    - If a row contains no valid non-zero numeric values, nothing is highlighted.
+    - The original DataFrame is not modified.
     """
 
-    values = pd.to_numeric(row, errors="coerce")
+    # Convert values to numeric for comparison
+    numeric_matrix = dataframe.apply(
+        pd.to_numeric,
+        errors="coerce"
+    )
 
-    if values.notna().sum() == 0:
-        return [""] * len(row)
+    def highlight_row(row):
+        """
+        Generate styles for one row.
+        """
 
-    max_value = values.max()
+        values = pd.to_numeric(
+            row,
+            errors="coerce"
+        )
 
-    return [
-        "background-color: yellow; color: black"
-        if pd.notna(value) and (value == max_value and max_value != 0)
-        else ""
-        for value in values
-    ]
+        # Ignore NaN values
+        valid_values = values.dropna()
+
+        # If there are no numeric values, highlight nothing
+        if valid_values.empty:
+            return [""] * len(row)
+
+        # Ignore zero when finding the maximum
+        non_zero_values = valid_values[valid_values != 0]
+
+        # If the row contains only zero/NaN values
+        if non_zero_values.empty:
+            return [""] * len(row)
+
+        # Find the maximum non-zero value
+        max_value = non_zero_values.max()
+
+        # Highlight every occurrence of the maximum
+        return [
+            (
+                "background-color: white; "
+                "color: black; "
+                "font-weight: bold;"
+            )
+            if pd.notna(value)
+            and value == max_value
+            else ""
+            for value in values
+        ]
+
+    return dataframe.style.apply(
+        highlight_row,
+        axis=1
+    )
 
 
 def highest_similarity(similarity_df):
@@ -169,7 +223,18 @@ def highest_similarity(similarity_df):
     For each row:
     - Only lower-triangular values are considered.
     - The highest value in that row is highlighted.
-    - Yellow background, black font, and bold text are used.
+    - Highlighting is performed using the highlightMax() function.
+    - The original similarity_df is not modified.
+
+    Parameters
+    ----------
+    similarity_df : pandas.DataFrame
+        Original lower-triangular similarity matrix.
+
+    Returns
+    -------
+    pandas.io.formats.style.Styler
+        Styled similarity matrix.
     """
 
     # Convert numeric cells to a NumPy array
@@ -180,56 +245,29 @@ def highest_similarity(similarity_df):
 
     # Create a mask for the lower triangle, excluding diagonal
     lower_triangle_mask = np.tril(
-        np.ones_like(numeric_matrix, dtype=bool),
+        np.ones_like(
+            numeric_matrix,
+            dtype=bool
+        ),
         k=-1
     )
 
-    # Ignore values outside the lower triangle
+    # Keep only lower-triangular values
     lower_triangle = np.where(
         lower_triangle_mask,
         numeric_matrix,
         np.nan
     )
 
-    # Find the maximum value in each row
-    row_max = np.nanmax(
-        lower_triangle,
-        axis=1
-    )
+    # Create a copy so the original similarity_df is not modified
+    lower_triangle_df = similarity_df.copy()
 
-    # Find positions of row-wise maximum values
-    max_positions = np.zeros_like(
-        numeric_matrix,
-        dtype=bool
-    )
+    # Replace all values outside the lower triangle with NaN
+    lower_triangle_df.iloc[:, :] = lower_triangle
 
-    for row_index in range(len(row_max)):
-        if not np.isnan(row_max[row_index]):
-            max_positions[row_index, :] = (
-                lower_triangle[row_index, :] == row_max[row_index]
-            )
 
-    # Highlight the maximum value in each row
-    def highlight_max(row):
-        row_index = similarity_df.index.get_loc(row.name)
-
-        styles = [""] * len(row)
-
-        for col_index in range(len(row)):
-            if max_positions[row_index, col_index]:
-                styles[col_index] = (
-                    "background-color: yellow; "
-                    "color: black; "
-                    "font-weight: bold;"
-                )
-
-        return styles
-
-    
-    return similarity_df.style.apply(
-        highlight_max,
-        axis=1
-    )
+    # Highlight the highest value in each row
+    return highlightMax(lower_triangle_df)
 
 
 def max_threshold(similarity_df, x):
@@ -238,26 +276,34 @@ def max_threshold(similarity_df, x):
     the highest value in each row.
 
     The original similarity_df is not modified.
+
+    Parameters
+    ----------
+    similarity_df : pandas.DataFrame
+        Original similarity matrix.
+
+    x : float
+        Threshold value. Values below x are converted to zero.
+
+    Returns
+    -------
+    pandas.io.formats.style.Styler
+        Thresholded and highlighted similarity matrix.
     """
 
-    # Work on a copy
+    # Create a copy so the original similarity_df is not modified
     thresholded_df = similarity_df.copy()
 
-    # Convert numeric cells below threshold to zero
+    # Convert values to numeric for threshold comparison
     numeric_matrix = thresholded_df.apply(
         pd.to_numeric,
         errors="coerce"
     )
 
+    # Convert values below the threshold to zero
     thresholded_df = thresholded_df.mask(
         numeric_matrix < x,
         0
     )
 
-    # Highlight highest value in each row
-    styled_df = thresholded_df.style.apply(
-        _highlight_row_max,
-        axis=1
-    )
-
-    return styled_df
+    return thresholded_df
