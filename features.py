@@ -205,6 +205,7 @@ def highest_similarity(similarity_df):
 
         return styles
 
+    
     return similarity_df.style.apply(
         highlight_max,
         axis=1
