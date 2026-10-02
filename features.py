@@ -1,7 +1,8 @@
 
 
 from imports import *
-
+import numpy as np
+import pandas as pd
 
 #MASK GUIDED DEEP FEATURE EXTRACTION
 
@@ -140,4 +141,71 @@ def extract_class_features(
     )
 
 
+def highest_similarity(similarity_df):
+    """
+    Highlight the highest class-to-class cosine similarity
+    in each row of the lower-triangular similarity matrix.
 
+    For each row:
+    - Only lower-triangular values are considered.
+    - The highest value in that row is highlighted.
+    - Yellow background, black font, and bold text are used.
+    """
+
+    # Convert numeric cells to a NumPy array
+    numeric_matrix = similarity_df.apply(
+        pd.to_numeric,
+        errors="coerce"
+    ).to_numpy()
+
+    # Create a mask for the lower triangle, excluding diagonal
+    lower_triangle_mask = np.tril(
+        np.ones_like(numeric_matrix, dtype=bool),
+        k=-1
+    )
+
+    # Ignore values outside the lower triangle
+    lower_triangle = np.where(
+        lower_triangle_mask,
+        numeric_matrix,
+        np.nan
+    )
+
+    # Find the maximum value in each row
+    row_max = np.nanmax(
+        lower_triangle,
+        axis=1
+    )
+
+    # Find positions of row-wise maximum values
+    max_positions = np.zeros_like(
+        numeric_matrix,
+        dtype=bool
+    )
+
+    for row_index in range(len(row_max)):
+        if not np.isnan(row_max[row_index]):
+            max_positions[row_index, :] = (
+                lower_triangle[row_index, :] == row_max[row_index]
+            )
+
+    # Highlight the maximum value in each row
+    def highlight_max(row):
+        row_index = similarity_df.index.get_loc(row.name)
+
+        styles = [""] * len(row)
+
+        for col_index in range(len(row)):
+            if max_positions[row_index, col_index]:
+                styles[col_index] = (
+                    "background-color: yellow; "
+                    "color: black; "
+                    "font-weight: bold;"
+                )
+
+        return styles
+
+    return similarity_df.style.apply(
+        highlight_max,
+        axis=1
+    )
