@@ -237,8 +237,11 @@ def highest_similarity(similarity_df):
         Styled similarity matrix.
     """
 
+    # Create a copy so the original similarity_df is not modified
+    lower_triangle_df = similarity_df.copy()
+
     # Convert numeric cells to a NumPy array
-    numeric_matrix = similarity_df.apply(
+    numeric_matrix = lower_triangle_df.apply(
         pd.to_numeric,
         errors="coerce"
     ).to_numpy()
@@ -252,19 +255,16 @@ def highest_similarity(similarity_df):
         k=-1
     )
 
-    # Keep only lower-triangular values
-    lower_triangle = np.where(
-        lower_triangle_mask,
-        numeric_matrix,
-        np.nan
-    )
+    # Empty all cells that are NOT in the lower triangle
+    # Only for the temporary DataFrame used for highlighting
+    for row_index in range(len(lower_triangle_df)):
+        for col_index in range(len(lower_triangle_df.columns)):
 
-    # Create a copy so the original similarity_df is not modified
-    lower_triangle_df = similarity_df.copy()
-
-    # Replace all values outside the lower triangle with NaN
-    lower_triangle_df.iloc[:, :] = lower_triangle
-
+            if not lower_triangle_mask[row_index, col_index] :
+                lower_triangle_df.iloc[
+                    row_index,
+                    col_index
+                ] = ""
 
     # Highlight the highest value in each row
     return highlightMax(lower_triangle_df)
