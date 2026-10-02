@@ -260,7 +260,7 @@ def highest_similarity(similarity_df):
     for row_index in range(len(lower_triangle_df)):
         for col_index in range(len(lower_triangle_df.columns)):
 
-            if not lower_triangle_mask[row_index, col_index] :
+            if not lower_triangle_mask[row_index, col_index] and row_index != col_index:
                 lower_triangle_df.iloc[
                     row_index,
                     col_index
