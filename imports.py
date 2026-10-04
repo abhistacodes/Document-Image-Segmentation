@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import cv2
 from PIL import Image
 
@@ -27,5 +28,3 @@ from torchinfo import summary # type: ignore
 
 import importlib
 
-import numpy as np
-import pandas as pd
