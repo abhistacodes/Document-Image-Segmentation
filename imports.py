@@ -26,5 +26,4 @@ from tqdm.auto import tqdm as tqdm # type: ignore
 
 from torchinfo import summary # type: ignore
 
-import importlib
 
