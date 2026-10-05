@@ -2,6 +2,7 @@ from imports import *
 import numpy as np
 import pandas as pd
 
+
 def highlightMax(dataframe):
     """
     Highlight the highest numeric value in each row of a DataFrame.
