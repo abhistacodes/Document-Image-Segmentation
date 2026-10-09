@@ -7,7 +7,7 @@ def highlightMax(dataframe):
     Highlight all highest non-zero numeric values in each row.
     Preserve the DataFrame's original values and structure.
     """
-    
+
     dc = dataframe.copy()
 
     def style_row(row):
@@ -22,7 +22,7 @@ def highlightMax(dataframe):
             for j, value in enumerate(values):
                 if pd.notna(value) and value == maximum:
                     styles[j] = (
-                        "background-color: pink; "
+                        "background-color: teal; "
                         "color: black; font-weight: bold;"
                     )
 
