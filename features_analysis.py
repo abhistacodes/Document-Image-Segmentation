@@ -169,3 +169,116 @@ def max_threshold(similarity_df, x):
     )
 
     return thresholded_df
+
+
+def print_highest_values(dataframe):
+    """
+    Print the [row, column] labels of the highest non-zero numeric
+    value(s) in each row of a DataFrame.
+
+    This follows the same row-wise rules as highlightMax():
+    - Non-numeric and NaN values are ignored.
+    - Zero values are ignored.
+    - If multiple cells tie for the row maximum, all are printed.
+    - Rows with no valid non-zero numeric values are skipped.
+    - The input DataFrame is not modified.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        DataFrame whose row-wise maximum cell labels should be printed.
+
+    Returns
+    -------
+    list[tuple]
+        List of (row_label, column_label) pairs for the maximum cell(s).
+    """
+    highlighted_cells = []
+
+    for row_label, row in dataframe.iterrows():
+        values = pd.to_numeric(row, errors="coerce")
+        valid_values = values.dropna()
+        non_zero_values = valid_values[valid_values != 0]
+
+        if non_zero_values.empty:
+            continue
+
+        max_value = non_zero_values.max()
+
+        for column_label, value in values.items():
+            if pd.notna(value) and value == max_value:
+                cell = (row_label, column_label)
+                highlighted_cells.append(cell)
+                print(f"[{row_label}, {column_label}]")
+
+    return highlighted_cells
+
+
+def class_wise_highest_similarity(similarity_df):
+    """
+    Find each class's highest similarity with any other class by checking
+    both its row and its column.
+
+    This supports lower-triangular similarity DataFrames where a pair's
+    similarity may appear in either the class's row or its column.
+
+    Parameters
+    ----------
+    similarity_df : pandas.DataFrame
+        Similarity matrix with class names as both index and columns.
+
+    Returns
+    -------
+    dict
+        Maps each class label to a list of (class_label, similarity_value)
+        pairs tied for that class's highest non-zero similarity.
+    """
+    results = {}
+
+    for class_name in similarity_df.index:
+        candidates = []
+
+        # Values in this class's row: compare with classes in the columns.
+        if class_name in similarity_df.index:
+            row = similarity_df.loc[class_name]
+            for other_class, value in row.items():
+                if other_class == class_name:
+                    continue
+                numeric_value = pd.to_numeric(
+                    pd.Series([value]), errors="coerce"
+                ).iloc[0]
+                if pd.notna(numeric_value) and numeric_value != 0:
+                    candidates.append((other_class, float(numeric_value)))
+
+        # Values in this class's column: compare with classes in the rows.
+        if class_name in similarity_df.columns:
+            column = similarity_df[class_name]
+            for other_class, value in column.items():
+                if other_class == class_name:
+                    continue
+                numeric_value = pd.to_numeric(
+                    pd.Series([value]), errors="coerce"
+                ).iloc[0]
+                if pd.notna(numeric_value) and numeric_value != 0:
+                    candidates.append((other_class, float(numeric_value)))
+
+        if not candidates:
+            results[class_name] = []
+            print(f"[{class_name}, no non-zero similarity found]")
+            continue
+
+        highest_value = max(value for _, value in candidates)
+
+        # Keep all classes tied at the highest value, without duplicate pairs.
+        highest_classes = []
+        seen = set()
+        for other_class, value in candidates:
+            if value == highest_value and other_class not in seen:
+                highest_classes.append((other_class, value))
+                seen.add(other_class)
+
+        results[class_name] = highest_classes
+        for other_class, value in highest_classes:
+            print(f"[{class_name}, {other_class}] = {value:.6f}")
+
+    return results
