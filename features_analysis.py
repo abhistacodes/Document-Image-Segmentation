@@ -7,7 +7,7 @@ def highlightMax(dataframe):
     Highlight all highest non-zero numeric values in each row.
     Preserve the DataFrame's original values and structure.
     """
-    numeric_df = dataframe.apply(pd.to_numeric, errors="coerce")
+    
     dc = dataframe.copy()
 
     def style_row(row):
