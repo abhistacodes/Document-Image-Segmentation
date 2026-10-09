@@ -4,59 +4,31 @@ import pandas as pd
 
 def highlightMax(dataframe):
     """
-    Highlight every row-wise maximum in a DataFrame.
-
-    Non-numeric values and zeros are ignored. If a row has no non-zero
-    numeric values, no cell in that row is highlighted. Tied maxima are
-    all highlighted.
-
-    Parameters
-    ----------
-    dataframe : pandas.DataFrame
-        DataFrame whose row-wise maximum values should be highlighted.
-
-    Returns
-    -------
-    pandas.io.formats.style.Styler
-        Styled DataFrame with the highest value(s) in each row highlighted.
+    Highlight all highest non-zero numeric values in each row.
+    Preserve the DataFrame's original values and structure.
     """
     numeric_df = dataframe.apply(pd.to_numeric, errors="coerce")
+    dc = dataframe.copy()
 
     def style_row(row):
         values = pd.to_numeric(row, errors="coerce")
-        candidates = values[values.notna() & values.ne(0)]
+        valid = values[values.notna() & values.ne(0)]
 
-        styles = pd.Series("", index=row.index, dtype=object)
-        if not candidates.empty:
-            maximum = candidates.max()
-            styles.loc[values.eq(maximum)] = (
-                "background-color: yellow; color: black; font-weight: bold;"
-            )
-        return styles.tolist()
+        styles = [""] * len(row)
 
-    return dataframe.style.apply(style_row, axis=1)
+        if not valid.empty:
+            maximum = valid.max()
 
+            for j, value in enumerate(values):
+                if pd.notna(value) and value == maximum:
+                    styles[j] = (
+                        "background-color: pink; "
+                        "color: black; font-weight: bold;"
+                    )
 
-def highest_similarity(similarity_df):
-    """
-    Highlight the highest non-zero similarity value(s) in each row.
+        return styles
 
-    Works with a full similarity matrix or a lower-triangular DataFrame
-    whose unavailable cells are blank/NaN. The input DataFrame is not
-    modified. Tied maxima are all highlighted.
-
-    Parameters
-    ----------
-    similarity_df : pandas.DataFrame
-        Full or lower-triangular similarity matrix.
-
-    Returns
-    -------
-    pandas.io.formats.style.Styler
-        Styled copy of the input DataFrame.
-    """
-    dataframe_copy = similarity_df.copy()
-    return highlightMax(dataframe_copy)
+    return dc.style.apply(style_row, axis=1)
 
 
 def max_threshold(similarity_df, x):
@@ -93,8 +65,8 @@ def class_wise_highest_similarity(similarity_df):
     considering both its row and its column.
 
     This supports full or lower-triangular matrices. Diagonal entries,
-    zeros, NaNs, and non-numeric values are ignored. Ties are retained,
-    and duplicate class pairs are returned only once.
+    zeros, NaNs, and non-numeric values are ignored. 
+    Ties are retained, and duplicate class pairs are returned only once.
 
     Parameters
     ----------
