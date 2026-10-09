@@ -126,7 +126,7 @@ def highest_similarity(similarity_df):
                 lower_triangle_df.iloc[
                     row_index,
                     col_index
-                ] = 0.0
+                ] = np.nan  # Use NaN to indicate empty cells
 
     # Highlight the highest value in each row
     return highlightMax(lower_triangle_df)
