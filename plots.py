@@ -1,6 +1,4 @@
-
 from imports import *
-
 
 #plot training curves
 
