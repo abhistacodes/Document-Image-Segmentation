@@ -27,4 +27,10 @@ from tqdm.auto import tqdm as tqdm # type: ignore
 
 from torchinfo import summary # type: ignore
 
+from scipy.cluster.hierarchy import (
+    linkage,
+    dendrogram,
+    cut_tree
+)
+from scipy.spatial.distance import squareform
 
