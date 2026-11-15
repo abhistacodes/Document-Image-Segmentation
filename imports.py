@@ -8,6 +8,13 @@ import xml.etree.ElementTree as ET
 import importlib
 from pathlib import Path
 
+from scipy.cluster.hierarchy import (
+    linkage,
+    dendrogram,
+    cut_tree
+)
+from scipy.spatial.distance import squareform
+
 import numpy as np
 import pandas as pd
 import cv2
@@ -27,9 +34,3 @@ from tqdm.auto import tqdm as tqdm # type: ignore
 
 from torchinfo import summary # type: ignore
 
-from scipy.cluster.hierarchy import (
-    linkage,
-    dendrogram,
-    cut_tree
-)
-from scipy.spatial.distance import squareform
