@@ -31,6 +31,35 @@ def highlightMax(dataframe):
     return dc.style.apply(style_row, axis=1)
 
 
+def highlightMin(dataframe):
+    """
+    Highlight all lowest non-zero numeric values in each row.
+    Preserve the DataFrame's original values and structure.
+    """
+
+    dc = dataframe.copy()
+
+    def style_row(row):
+        values = pd.to_numeric(row, errors="coerce")
+        valid = values[values.notna() & values.ne(0)]
+
+        styles = [""] * len(row)
+
+        if not valid.empty:
+            minimum = valid.min()
+
+            for j, value in enumerate(values):
+                if pd.notna(value) and value == minimum:
+                    styles[j] = (
+                        "background-color: teal; "
+                        "color: black; font-weight: bold;"
+                    )
+
+        return styles
+
+    return dc.style.apply(style_row, axis=1)
+
+
 def max_threshold(similarity_df, x):
     """
     Return a copy of the DataFrame with numeric values below threshold x
