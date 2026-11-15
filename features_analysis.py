@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-
 def highlightMax(dataframe):
     """
     Highlight all highest non-zero numeric values in each row.
@@ -25,9 +24,7 @@ def highlightMax(dataframe):
                         "background-color: teal; "
                         "color: black; font-weight: bold;"
                     )
-
         return styles
-
     return dc.style.apply(style_row, axis=1)
 
 
@@ -42,7 +39,6 @@ def highlightMin(dataframe):
     def style_row(row):
         values = pd.to_numeric(row, errors="coerce")
         valid = values[values.notna() & values.ne(0)]
-
         styles = [""] * len(row)
 
         if not valid.empty:
@@ -54,9 +50,7 @@ def highlightMin(dataframe):
                         "background-color: purple; "
                         "color: white; font-weight: bold;"
                     )
-
         return styles
-
     return dc.style.apply(style_row, axis=1)
 
 
@@ -142,7 +136,6 @@ def class_wise_highest_similarity(similarity_df):
                         candidates.get(other_class, -np.inf),
                         float(numeric_value),
                     )
-
         if not candidates:
             results[class_name] = []
             continue
@@ -153,5 +146,4 @@ def class_wise_highest_similarity(similarity_df):
             for other_class, value in candidates.items()
             if value == highest_value
         ]
-
     return results
