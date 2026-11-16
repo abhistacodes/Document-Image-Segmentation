@@ -47,7 +47,7 @@ def highlightMin(dataframe):
             for j, value in enumerate(values):
                 if pd.notna(value) and value == minimum:
                     styles[j] = (
-                        "background-color: purple; "
+                        "background-color: magenta; "
                         "color: white; font-weight: bold;"
                     )
         return styles
