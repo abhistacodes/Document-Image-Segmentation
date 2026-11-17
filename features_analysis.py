@@ -89,10 +89,8 @@ def max_threshold(similarity_df, x):
 def class_wise_highest_similarity(similarity_df):
     """
     Find each class's highest non-zero similarity with any other class,
-    considering both its row and its column.
-
-    This supports full or lower-triangular matrices. Diagonal entries,
-    zeros, NaNs, and non-numeric values are ignored. 
+    considering both its row and its column. This supports full or lower-triangular matrices. 
+    Diagonal entries, zeros, NaNs, and non-numeric values are ignored. 
     Ties are retained, and duplicate class pairs are returned only once.
 
     Parameters
