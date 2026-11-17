@@ -40,9 +40,12 @@ def extract_class_features(
     class_present = torch.zeros(
         (B, len(class_ids)), dtype=torch.bool, device=device
     )
+    
 
     # Output index differs from original class ID: only selected classes
     # receive output slots, while masks are compared against original IDs.
+
+
     for output_index, class_id in enumerate(class_ids):
         class_mask = resized_mask == class_id
         pixel_count = class_mask.sum(dim=(1, 2))
