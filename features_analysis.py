@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def highlightMax(dataframe):
     """
     Highlight all highest non-zero numeric values in each row.
@@ -26,6 +27,7 @@ def highlightMax(dataframe):
                     )
         return styles
     return dc.style.apply(style_row, axis=1)
+
 
 
 def highlightMin(dataframe):
@@ -54,6 +56,7 @@ def highlightMin(dataframe):
     return dc.style.apply(style_row, axis=1)
 
 
+
 def max_threshold(similarity_df, x):
     """
     Return a copy of the DataFrame with numeric values below threshold x
@@ -80,6 +83,7 @@ def max_threshold(similarity_df, x):
 
     # Replace only cells that are numeric and below the threshold.
     return thresholded_df.mask(below_threshold, 0)
+
 
 
 def class_wise_highest_similarity(similarity_df):
