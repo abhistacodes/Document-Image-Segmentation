@@ -77,9 +77,9 @@ def visualize_class_samples(
           the original image for easier visual comparison.
     """
 
-    # ------------------------------------------------------------------
+
     # Select dataset
-    # ------------------------------------------------------------------
+    
     if split == "train":
         dataset = train_dataset
     elif split == "test":
@@ -143,9 +143,9 @@ def visualize_class_samples(
             "or a class ID (int)."
         )
 
-    # ------------------------------------------------------------------
+
     # Validate number of samples
-    # ------------------------------------------------------------------
+    
     if num_samples < 1:
         raise ValueError("num_samples must be at least 1.")
 
