@@ -12,6 +12,8 @@ def extract_class_features(
     class_ids,
     device
 ):
+
+    
     """
     Extract feature vectors only for the requested original segmentation IDs.
 
