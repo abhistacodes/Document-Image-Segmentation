@@ -90,9 +90,9 @@ def visualize_class_samples(
     if len(dataset) == 0:
         raise ValueError(f"The {split} dataset is empty.")
 
-    # ------------------------------------------------------------------
+
     # Resolve class name / class ID
-    # ------------------------------------------------------------------
+    
     if isinstance(class_name_or_id, str):
         # Try an exact match first.
         if class_name_or_id in class_to_id:
@@ -149,9 +149,9 @@ def visualize_class_samples(
     if num_samples < 1:
         raise ValueError("num_samples must be at least 1.")
 
-    # ------------------------------------------------------------------
+
     # Find samples containing the requested class
-    # ------------------------------------------------------------------
+    
     matching_indices = []
 
     for index in range(len(dataset)):
@@ -168,9 +168,9 @@ def visualize_class_samples(
             f"class '{class_name}' (ID={class_id})."
         )
 
-    # ------------------------------------------------------------------
+
     # Select samples
-    # ------------------------------------------------------------------
+    
     if sample_indices is not None:
         invalid_indices = [
             index
@@ -197,9 +197,9 @@ def visualize_class_samples(
         else:
             selected_indices = available_indices[:num_samples]
 
-    # ------------------------------------------------------------------
+
     # Model inference
-    # ------------------------------------------------------------------
+    
     model.eval()
 
     samples = []
