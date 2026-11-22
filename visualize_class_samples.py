@@ -330,7 +330,7 @@ def visualize_class_samples(
 
 
     # Print summary
-    # ------------------------------------------------------------------
+    
     print(f"Class: {class_name}")
     print(f"Class ID: {class_id}")
     print(f"Split: {split}")
