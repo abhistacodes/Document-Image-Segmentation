@@ -268,6 +268,7 @@ def visualize_class_samples(
 
 
     # Plot samples
+    
     num_columns = 3
     figure_height = 5 * len(samples)
 
