@@ -289,7 +289,7 @@ def visualize_class_samples(
 
         # Pink class masks overlaid on the original image.
         # Pixels belonging to the selected class are highlighted in pink.
-        
+
         pink = np.zeros((*sample["ground_truth"].shape, 4), dtype=np.float32)
         pink[..., 0] = 1.0       # Red
         pink[..., 1] = 0.08      # Green
@@ -328,7 +328,7 @@ def visualize_class_samples(
     fig.tight_layout()
     plt.show()
 
-    # ------------------------------------------------------------------
+
     # Print summary
     # ------------------------------------------------------------------
     print(f"Class: {class_name}")
