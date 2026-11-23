@@ -82,6 +82,7 @@ def max_threshold(similarity_df, x):
     below_threshold = numeric_df.lt(x)
 
     # Replace only cells that are numeric and below the threshold.
+    
     return thresholded_df.mask(below_threshold, 0)
 
 
