@@ -3,7 +3,6 @@ from imports import *
 
 # print(f"PyTorch version: {torch.__version__}")
 
-
 #UNet Model
 
 class DoubleConv(nn.Module):
